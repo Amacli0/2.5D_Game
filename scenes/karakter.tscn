@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://dlcit2fjs1bpk"]
+
+[ext_resource type="Script" uid="uid://cwkdkf7a3kk5f" path="res://codes/char.gd" id="1_41xbd"]
+[ext_resource type="PackedScene" uid="uid://bftmpu2jugnnj" path="res://scenes/camera_pivot.tscn" id="2_r6lvq"]
+[ext_resource type="Texture2D" uid="uid://co5s0db2tiw76" path="res://icon.svg" id="3_m3b4u"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_r6lvq"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_m3b4u"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
+[node name="Karakter" type="CharacterBody3D" unique_id=1091054880]
+script = ExtResource("1_41xbd")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=687822608]
+shape = SubResource("CapsuleShape3D_r6lvq")
+
+[node name="CameraPivot" parent="." unique_id=1037716323 instance=ExtResource("2_r6lvq")]
+
+[node name="Sprite3D" type="Sprite3D" parent="." unique_id=480817894]
+billboard = 2
+texture_filter = 0
+texture = ExtResource("3_m3b4u")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=2134648874]
+replication_config = SubResource("SceneReplicationConfig_m3b4u")
+visibility_update_mode = 1
+
+[editable path="CameraPivot"]

@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://di1vwvhaik2gl"]
+
+[node name="NetworkManager" type="Control" unique_id=2116508238]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="LineEdit" type="LineEdit" parent="." unique_id=1616728292]
+layout_mode = 0
+offset_left = 77.0
+offset_top = 45.0
+offset_right = 1071.0
+offset_bottom = 205.0
+theme_override_font_sizes/font_size = 60
+
+[node name="HostBtn" type="Button" parent="." unique_id=864873780]
+layout_mode = 0
+offset_left = 124.0
+offset_top = 237.0
+offset_right = 524.0
+offset_bottom = 313.0
+text = "Sunuvu ac"
+
+[node name="ClientBtn" type="Button" parent="." unique_id=1221919049]
+layout_mode = 0
+offset_left = 573.0
+offset_top = 238.0
+offset_right = 973.0
+offset_bottom = 314.0
+text = "sunucu git"
