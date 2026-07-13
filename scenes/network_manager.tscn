@@ -16,17 +16,9 @@ offset_right = 1071.0
 offset_bottom = 205.0
 theme_override_font_sizes/font_size = 60
 
-[node name="HostBtn" type="Button" parent="." unique_id=864873780]
-layout_mode = 0
-offset_left = 124.0
-offset_top = 237.0
-offset_right = 524.0
-offset_bottom = 313.0
-text = "Sunuvu ac"
-
 [node name="ClientBtn" type="Button" parent="." unique_id=1221919049]
 layout_mode = 0
-offset_left = 573.0
+offset_left = 153.0
 offset_top = 238.0
 offset_right = 973.0
 offset_bottom = 314.0
