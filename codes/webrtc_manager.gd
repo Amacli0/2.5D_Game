@@ -1,9 +1,9 @@
-extends Node
+extends Node3D
 
 var rct_peer := WebRTCMultiplayerPeer.new()
 var signal_socket := WebSocketPeer.new()
 
-const SIGNAL_ADDRESS = "ws:/127.0.0.1:9080"
+const SIGNAL_ADDRESS = "ws://127.0.0.1:9080"
 var my_id := 0
 var is_server := false
 
@@ -13,11 +13,18 @@ var peer_connections := {}
 func setup_network(as_server: bool):
 	is_server = as_server
 
+	# 1. Godot Multiplayer WebRTC altyapısını başlat
+	if is_server:
+		rct_peer.create_server()
+		multiplayer.multiplayer_peer = rct_peer
+
+	# 3. Sinyal sunucusuna bağlan
 	var error = signal_socket.connect_to_url(SIGNAL_ADDRESS)
 	if error == OK:
 		print("Postacıya (Signaling) bağlanılıyor...")
 	else:
 		print("Postacıya bağlanılamadı: ", error)
+		
 		
 func _process(delta: float) -> void:
 	signal_socket.poll()
@@ -34,7 +41,7 @@ func signal_mesaji_isle(data: Dictionary):
 	var sender = data.get("sender", "")
 	print("Postacıdan mesaj geldi! Tipi: ", type, " Gönderen: ", sender)
 	
-	
+	_signaling_mesajini_isle(data)
 	
 	
 # -------------------------------------------------------------------
@@ -45,19 +52,21 @@ func _signaling_mesajini_isle(data: Dictionary):
 	var sender = data.get("sender", 0)
 	
 	if type == "welcome":
-		# Bakkal bize "Hoş geldin, senin müşteri numaran (ID) bu" dedi.
-		var my_id = data.get("id", 0)
+		var assigned_id = data.get("id", 0)
 		print("Signaling ID'miz alındı: ", my_id)
 		
 		# Eğer biz OYUNCUYSAK, hemen Sunucuya (ID: 1) TEKLİF (Offer) atıyoruz!
 		if not is_server:
+			my_id = assigned_id
+			rct_peer.create_client(my_id)
+			multiplayer.multiplayer_peer = rct_peer
 			_teklif_olustur_ve_gonder(1)
 
 	elif type == "offer":
 		# SUNUCU TARAFINDAYIZ: Oyuncudan TEKLİF geldi!
 		# Şimdi buna CEVAP (Answer) vereceğiz.
 		_teklifi_kabul_et_ve_cevapla(sender, data.get("sdp", ""))
-
+		print("SUNUCUYA OFFER ULAŞTI! Cevap hazırlanıyor...")
 	elif type == "answer":
 		# OYUNCU TARAFINDAYIZ: Sunucudan CEVAP geldi!
 		_cevabi_isle(sender, data.get("sdp", ""))
@@ -74,7 +83,6 @@ func _signaling_mesajini_isle(data: Dictionary):
 func _teklif_olustur_ve_gonder(target_id: int):
 	var connection = _yeni_baglanti_olustur(target_id)
 	connection.create_offer()
-
 # 2. MEHMET (Server): Teklifi Alır ve Cevap (Answer) Üretir
 func _teklifi_kabul_et_ve_cevapla(sender_id: int, sdp: String):
 	var connection = _yeni_baglanti_olustur(sender_id)
